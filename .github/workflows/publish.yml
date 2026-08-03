@@ -1,22 +1,24 @@
-name: Publish MyWallpaper release
+name: Publish MyWallpaper release through admission-v1
 
 on:
-  release:
-    types: [published]
+  push:
+    tags: ['v*']
 
 permissions:
   contents: read
 
 jobs:
   release:
+    if: github.event.repository.private == false
     concurrency:
       group: mywallpaper-release-${{ github.repository_id }}-${{ github.ref }}
       cancel-in-progress: false
     permissions:
       actions: read
+      artifact-metadata: write
       attestations: write
-      contents: read
+      contents: write
       id-token: write
-    uses: MyWallpapers/native-addon-toolchain/.github/workflows/native-addon-build.yml@380cf6e8ce47616a5310ba4de802dbf872ed22e6
+    uses: MyWallpapers/native-addon-toolchain/.github/workflows/native-addon-build.yml@fce289da71538f7292bd9324b4f02e8ea469cea8
     with:
       channel: development
