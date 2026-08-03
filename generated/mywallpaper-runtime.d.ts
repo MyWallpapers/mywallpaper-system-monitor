@@ -4,7 +4,7 @@ export type JsonValue = JsonPrimitive | JsonValue[] | {
 	[key: string]: JsonValue;
 };
 export type RuntimeSurface = "interface" | "wallpaper";
-export type RuntimeMode = "live" | "preview" | "thumbnail";
+export type RuntimeMode = "interactive" | "thumbnail";
 export type RuntimeInstance = {
 	instanceId: string;
 	displayIndex: number;
@@ -12,6 +12,10 @@ export type RuntimeInstance = {
 	canonical: boolean;
 	width: number;
 	height: number;
+};
+type ResourceValue = {
+	"kind": "live";
+	url: string;
 };
 export type AddonValues = Record<string, JsonValue>;
 declare const CANVAS_HOST_MESSAGE_SOURCE = "mywallpaper-web-host";
@@ -41,7 +45,7 @@ export type NativeHookStatus = {
 } & ({
 	state: "active";
 } | {
-	state: "disabled" | "starting" | "degraded" | "quarantined" | "incompatible" | "conflict";
+	state: "disabled" | "starting" | "degraded" | "incompatible" | "conflict";
 	cause: string;
 	action: string;
 });
@@ -52,7 +56,7 @@ export interface NativeHookEvent {
 	process: {
 		pid: number;
 		executable: string;
-		architecture: "windows-x86" | "windows-x86_64" | "windows-aarch64";
+		architecture: "windows-x86_64" | "windows-aarch64";
 	};
 }
 export interface CanvasBusEvent {
@@ -70,7 +74,7 @@ export interface CanvasBus {
 }
 export interface LayerSettingsApi {
 	get(): AddonValues;
-	set(partial: AddonValues): void;
+	set(partial: AddonValues): Promise<void>;
 	subscribe(listener: CanvasApiListener<AddonValues>): () => void;
 }
 export interface LayerActionsApi {
@@ -79,37 +83,47 @@ export interface LayerActionsApi {
 export interface LayerLifecycleApi {
 	onDispose(listener: () => void): () => void;
 }
+interface LayerResourcesApi {
+	resolve(value: ResourceValue): Promise<string>;
+}
 export interface CanvasRuntimeApi {
 	readonly surface: RuntimeSurface;
 	readonly mode: RuntimeMode;
 	readonly instance: RuntimeInstance;
 }
-interface CanvasLayerApi {
+export interface CanvasLayerApi {
+	/**
+	 * Stable container owned by this layer instance. Every layer has a distinct
+	 * root, while all roots share the same Canvas `document` and `window`.
+	 */
 	readonly root: HTMLElement;
 	readonly layerId: string;
 	readonly settings: LayerSettingsApi;
 	readonly deviceSettings: LayerSettingsApi;
 	readonly actions: LayerActionsApi;
 	readonly lifecycle: LayerLifecycleApi;
+	readonly resources: LayerResourcesApi;
 	readonly bus: CanvasBus;
+	/** Native attachment owned by this exact layer; it cannot address another add-on. */
 	readonly native: LayerNativeApi;
 }
-export interface MyWallpaperCanvasApi {
+/** Explicit capability object passed only to an add-on's exported `mount`. */
+export interface CanvasAddonMountContext {
 	readonly runtime: CanvasRuntimeApi;
 	readonly layer: CanvasLayerApi;
+	/** Exact alias of `layer.bus`, provided for the concise public bus API. */
 	readonly bus: CanvasBus;
+}
+export type CanvasAddonCleanup = () => void;
+export type CanvasAddonMount = (context: CanvasAddonMountContext) => void | CanvasAddonCleanup;
+export interface CanvasAddonModule {
+	readonly mount: CanvasAddonMount;
 }
 interface CanvasActionMessage {
 	source: typeof CANVAS_HOST_MESSAGE_SOURCE;
 	type: "CANVAS_ACTION";
 	layerId: string;
 	key: string;
-}
-
-declare global {
-	interface Window {
-		MyWallpaper: MyWallpaperCanvasApi;
-	}
 }
 
 export {};

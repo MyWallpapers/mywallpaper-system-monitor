@@ -2,7 +2,7 @@
   "runtime": "canvas-v1",
   "name": "System Monitor",
   "description": "Shows live CPU, memory and GPU telemetry from its open-source native companion in a customizable Canvas panel.",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "entry": "dist/index.html",
   "thumbnail": "assets/thumbnail.png",
   "deviceSettingsVersion": "1",
@@ -19,6 +19,7 @@
       "id": "showCpu",
       "type": "boolean",
       "label": "CPU",
+      "parent": "display",
       "scope": "layer",
       "default": true
     },
@@ -26,6 +27,7 @@
       "id": "showMemory",
       "type": "boolean",
       "label": "Memory",
+      "parent": "display",
       "scope": "layer",
       "default": true
     },
@@ -33,14 +35,22 @@
       "id": "showGpu",
       "type": "boolean",
       "label": "GPU",
+      "parent": "display",
       "scope": "layer",
       "default": true
+    },
+    {
+      "id": "sampling",
+      "type": "section",
+      "label": "Sampling",
+      "description": "Controls the native sampler shared by every System Monitor instance on this device."
     },
     {
       "id": "refreshInterval",
       "type": "select",
       "label": "Refresh rate",
       "description": "Shared by every System Monitor instance on this device.",
+      "parent": "sampling",
       "scope": "device",
       "default": "1s",
       "options": [
@@ -58,6 +68,7 @@
       "id": "backgroundColor",
       "type": "color",
       "label": "Background",
+      "parent": "appearance",
       "scope": "layer",
       "default": "#10131a"
     },
@@ -65,6 +76,7 @@
       "id": "textColor",
       "type": "color",
       "label": "Text",
+      "parent": "appearance",
       "scope": "layer",
       "default": "#e7edf7"
     },
@@ -72,6 +84,7 @@
       "id": "accentColor",
       "type": "color",
       "label": "Accent",
+      "parent": "appearance",
       "scope": "layer",
       "default": "#61dafb"
     },
@@ -79,11 +92,34 @@
       "id": "opacity",
       "type": "range",
       "label": "Panel opacity",
+      "parent": "appearance",
       "scope": "layer",
       "min": 0.2,
       "max": 1,
       "step": 0.05,
       "default": 0.9
+    },
+    {
+      "id": "cornerRadius",
+      "type": "range",
+      "label": "Corner radius",
+      "parent": "appearance",
+      "scope": "layer",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "default": 18
+    },
+    {
+      "id": "blurAmount",
+      "type": "range",
+      "label": "Background blur",
+      "parent": "appearance",
+      "scope": "layer",
+      "min": 0,
+      "max": 40,
+      "step": 1,
+      "default": 18
     }
   ],
   "native": {
