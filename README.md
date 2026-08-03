@@ -33,7 +33,7 @@ pnpm dev
 For the complete native preview, run `mywallpaper dev` from this directory
 with the released `@mywallpaper/cli`, enable Developer Mode in MyWallpaper
 Desktop, then load the loopback URL shown by the CLI. Published GitHub releases
-use MyWallpaper's reusable OIDC workflow to rebuild x64 and ARM64 executables
+use MyWallpaper's reusable OIDC workflow to rebuild the x64 executable
 from source; binaries and web `dist/` output are not committed. Publishing
 creates a candidate identified by its SemVer and digest; promotion and
 recommendation are separate, and installed releases never auto-update.
