@@ -108,12 +108,11 @@ export function mount({ layer, runtime, bus }: CanvasAddonMountContext): () => v
   }, 1_000)
 
   async function connectNative(): Promise<void> {
-    if (!layer.native.companion.available) {
-      showFeedback('Native monitoring is unavailable. Use MyWallpaper Desktop on Windows and enable this add-on’s native capability.', 'error')
-      setConnection('closed', 'Unavailable')
-      return
-    }
     try {
+      // The verified companion is attached after Canvas mounts the layer.
+      // `connect()` deliberately waits across that reconciliation boundary;
+      // a one-time `available` read here would turn a normal startup race into
+      // a permanent false-negative.
       const connection = await layer.native.companion.connect()
       if (disposed) {
         connection.close()
