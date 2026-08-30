@@ -1,5 +1,5 @@
 {
-  "runtime": "canvas-v1",
+  "runtime": "canvas-native-v1",
   "name": "System Monitor",
   "description": "Shows live CPU, memory and GPU telemetry from its open-source native companion in a customizable Canvas panel.",
   "version": "3.1.5",
