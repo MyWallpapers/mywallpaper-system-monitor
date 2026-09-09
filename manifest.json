@@ -2,7 +2,7 @@
   "runtime": "canvas-native-v1",
   "name": "System Monitor",
   "description": "Shows live CPU, memory and GPU telemetry from its open-source native companion in a customizable Canvas panel.",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "entry": "dist/assets/addon.js",
   "thumbnail": "assets/thumbnail.png",
   "deviceSettingsVersion": "1",
@@ -54,9 +54,18 @@
       "scope": "device",
       "default": "1s",
       "options": [
-        { "label": "1 second", "value": "1s" },
-        { "label": "2 seconds", "value": "2s" },
-        { "label": "5 seconds", "value": "5s" }
+        {
+          "label": "1 second",
+          "value": "1s"
+        },
+        {
+          "label": "2 seconds",
+          "value": "2s"
+        },
+        {
+          "label": "5 seconds",
+          "value": "5s"
+        }
       ]
     },
     {
