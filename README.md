@@ -32,11 +32,9 @@ pnpm dev
 
 For the complete native preview, run `mywallpaper dev` from this directory
 with the released `@mywallpaper/cli`, enable Developer Mode in MyWallpaper
-Desktop, then load the loopback URL shown by the CLI. Published GitHub releases
-use MyWallpaper's reusable OIDC workflow to rebuild the x64 executable
-from source; binaries and web `dist/` output are not committed. Publishing
-creates a candidate identified by its SemVer and digest; promotion and
-recommendation are separate, and installed releases never auto-update.
+Desktop, then load the loopback URL shown by the CLI. The central publication
+workflow rebuilds the x64 companion from source and verifies its bytes.
+Installed releases never auto-update.
 
 Run `mywallpaper generate` after a Canvas contract update and commit the
 resulting `generated/mywallpaper-runtime.d.ts`. The official verifier
@@ -54,3 +52,19 @@ DXGI, ignores PDH instances belonging to every other adapter, then aggregates
 the selected adapter's per-process counters by physical engine and reports its
 busiest engine. The displayed name, memory and utilization therefore always
 describe the same GPU.
+
+## Publishing
+
+Merge the source and matching manifest/package version into the reviewed default
+branch, wait for quality checks, then push a new immutable `v<version>` tag.
+Open this add-on's management page in MyWallpaper and select that tag to request
+publication with an active lifetime entitlement.
+
+MyWallpaper resolves the exact public repository and commit, dispatches its
+pinned central workflow, rebuilds and verifies the artifacts, and publishes the
+immutable transport from the platform repository. The add-on repository needs
+no publication workflow or MyWallpaper credential. Do not pre-create a GitHub
+release: a source tag alone does not publish the add-on to the catalogue.
+
+Each accepted newer release is available for new installations. Existing
+wallpapers remain pinned to their exact release until explicitly changed.
